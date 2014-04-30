@@ -1,0 +1,110 @@
+<html>
+  <head>
+    <title>NGK Arrowfight</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-5">
+          <div class="panel panel-large gold">
+            <span id="team_gold_score">&nbsp;</span>
+          </div>
+        </div>
+
+        <div class="col-md-5 col-md-offset-2">
+          <div class="panel panel-large blue">
+            <span id="team_blue_score">&nbsp;</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row zones">
+        <div class="col-md-4">
+          <div class="panel panel-zone" id="zone_a">
+            <span>A</span>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="panel panel-zone" id="zone_b">
+            <span>B</span>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="panel panel-zone" id="zone_c">
+            <span>C</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row panelties">
+        <div class="col-md-4">
+          <div class="panel bar" id="progress_a">
+            <div class="progress"></div>
+          </div>
+        </div>
+
+        <div class="col-md-4"></div>
+
+        <div class="col-md-4">
+          <div class="panel bar" id="progress_c">
+            <div class="progress"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </body>
+
+  <script type="text/javascript">
+
+    var server = "http://localhost:5000";
+
+    // Update JSON data from server
+    function update() {
+      $.getJSON(server, function(data) {
+        // Set team scores
+        $("#team_blue_score").html(data.team_blue_score);
+        $("#team_gold_score").html(data.team_gold_score);
+
+        // Update panels according to team possession
+        $("#zone_a").addClass(data.zone_a_domination);
+        $("#zone_b").addClass(data.zone_b_domination);
+        $("#zone_c").addClass(data.zone_c_domination);
+
+
+        // Update button states for all panels
+        $("#zone_a").addClass("button_" + data.button_a_state);
+        $("#zone_b").addClass("button_" + data.button_b_state);
+        $("#zone_c").addClass("button_" + data.button_c_state);
+
+        // Set progress bar width
+        if(data.zone_a_disabled_percentage == 0 ) {
+          $("#progress_a").hide();
+        } else {
+          $("#progress_a").show()
+          $("#progress_a .progress").css("width", data.zone_a_disabled_percentage + "%");
+        }
+
+        if(data.zone_c_disabled_percentage == 0 ) {
+          $("#progress_c").hide();
+        } else {
+          $("#progress_c").show()
+          $("#progress_c .progress").css("width", data.zone_c_disabled_percentage + "%");
+        }
+
+      });
+    }
+
+    // Start a timer to call the JSON update
+    window.setInterval(function() {
+      update();
+    }, 1000);
+  </script>
+</html>
