@@ -64,7 +64,7 @@
 
   <script type="text/javascript">
 
-    var server = "http://localhost:5000";
+    var server = "http://192.168.1.178:4567";
 
     // Update JSON data from server
     function update() {
@@ -74,12 +74,16 @@
         $("#team_gold_score").html(data.team_gold_score);
 
         // Update panels according to team possession
+        $("#zone_a, #zone_b, #zone_c").removeClass("blue gold none down");
+
         $("#zone_a").addClass(data.zone_a_domination);
         $("#zone_b").addClass(data.zone_b_domination);
         $("#zone_c").addClass(data.zone_c_domination);
 
 
         // Update button states for all panels
+        $("#zone_a, #zone_b, #zone_c").removeClass("button_blue button_gold button_none button_down");
+
         $("#zone_a").addClass("button_" + data.button_a_state);
         $("#zone_b").addClass("button_" + data.button_b_state);
         $("#zone_c").addClass("button_" + data.button_c_state);
